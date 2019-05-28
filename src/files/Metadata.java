@@ -10,6 +10,6 @@ public class Metadata {
 	String permissions;
 	Date lastAccessTime;
 	Date createTime;
-	List<Block> blocks;//location of the file blocks
+	//List<Block> blocks;//location of the file blocks
 	
 }
