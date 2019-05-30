@@ -13,6 +13,7 @@ import java.net.UnknownHostException;
 public class mClient {
 	public static void main(String[] args) {
 		try {
+			//create client socket according to the server ip and port
 			Socket socket = new Socket("127.0.0.1", 8888);
 			
 			//construct IO
@@ -21,13 +22,17 @@ public class mClient {
 			
 			//send a message to server
 			BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream));
-			bufferedWriter.write("This is the message from client.");
+			bufferedWriter.write("Client fff: Request 1");
 			bufferedWriter.flush();
+			socket.shutdownOutput();
 			
 			//read the message send from server
 			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-			String serverMsg = bufferedReader.readLine();
-			System.out.println("Server:" + serverMsg);
+			String serverMsg = null;
+			while((serverMsg = bufferedReader.readLine()) != null) {
+				System.out.println("Client: receive from server "+ serverMsg);
+			}
+			socket.close();
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -27,16 +27,15 @@ public class mServer {
 		try {
 			ServerSocket serverSocket = new ServerSocket(8888);
 			System.out.println("Start the server...");
-			Socket socket = serverSocket.accept();
-			System.out.println("Client:" + socket.getInetAddress().getLocalHost() + " connect successfully to server" );
 			
-			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-			//read the message send from the client
-			String message = bufferedReader.readLine();
-			System.out.println("Client message:" + message);
-			BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-			bufferedWriter.write(message + "\n");
-			bufferedWriter.flush();
+			//listen and wait for the connect of client
+			while(true) {
+				Socket socket = serverSocket.accept();
+				//create a new thread to handle the client request
+				ServerThread serverThread = new ServerThread(socket);
+				serverThread.start();
+				System.out.println("Server: Clinet IP " + socket.getInetAddress().getLocalHost() + " connect successfully to server." );
+			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
