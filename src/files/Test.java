@@ -6,10 +6,18 @@ public class Test {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		FileTree fileTree = new FileTree();
-		fileTree.root.addChild("path1", false, new StringBuilder());
 		StringBuilder feedback = new StringBuilder();
+		
 		String path = "file1";
 		if(!fileTree.createFile(path, feedback)) {
+			System.out.println(feedback);
+		}
+		else {
+			System.out.println("create " + path + " success!");
+		}
+		
+		path = "path1";
+		if(!fileTree.makeDirectory(path, feedback)) {
 			System.out.println(feedback);
 		}
 		else {
@@ -24,15 +32,15 @@ public class Test {
 			System.out.println("create " + path + " success!");
 		}
 		
-		path = "path2/file2";
-		if(!fileTree.createFile(path, feedback)) {
+		path = "path1/path2";
+		if(!fileTree.makeDirectory(path, feedback)) {
 			System.out.println(feedback);
 		}
 		else {
 			System.out.println("create " + path + " success!");
 		}
 		
-		path = "file1/file2";
+		path = "path1/path2/file3";
 		if(!fileTree.createFile(path, feedback)) {
 			System.out.println(feedback);
 		}
@@ -40,7 +48,25 @@ public class Test {
 			System.out.println("create " + path + " success!");
 		}		
 		
+		path = "path1/fuke";
+		String result;
+		if((result = fileTree.listDirectory(path, feedback)) == null) {
+			System.out.println(feedback);
+		}
+		else {
+			System.out.println(result);
+		}	
 		
+		path = "path1/";
+		if(!fileTree.changeDirectory("path1/", feedback)) {
+			System.out.println(feedback);
+		}
+		System.out.println(fileTree.printWorkDirectory());
+		
+		if(!fileTree.changeDirectory("..", feedback)) {
+			System.out.println(feedback);
+		}
+		System.out.println(fileTree.printWorkDirectory());
 	}
 
 }
