@@ -3,14 +3,16 @@ package files;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.sun.org.apache.xalan.internal.xsltc.compiler.Template;
+import management.MasterManagement;
 
 public class FileTree {
 	TreeNode root;//root of the tree(namespace)
 	TreeNode currentNode;//current workspace
+	MasterManagement management;//the management of this tree
 	
 	//constructor
-	public FileTree() {
+	public FileTree(MasterManagement management) {
+		this.management = management;
 		this.root = new TreeNode(this);// create a root node
 		currentNode = root;
 	}
@@ -161,18 +163,12 @@ public class FileTree {
 		String result = "";
 		TreeNode tmpNode = null;
 		
-		//user do not specify which path, default current node
-		if(path==null || path.length() == 0) {
-			tmpNode = this.currentNode;
-		}
-		else {//user specify the path and go to the path
-			String[] paths = path.split("/");
-			List<String> dirs = pathToDir(paths);
-			//if the path does not exist
-			feedback.append("can not access '" + path + "': ");
-			if((tmpNode = moveToDir(dirs, feedback)) == null) {
-				return null;
-			}
+		String[] paths = path.split("/");
+		List<String> dirs = pathToDir(paths);
+		//if the path does not exist
+		feedback.append("can not access '" + path + "': ");
+		if((tmpNode = moveToDir(dirs, feedback)) == null) {
+			return null;
 		}
 		
 		if(tmpNode.isFile()) {// if the node is a file, list this file name
@@ -215,7 +211,7 @@ public class FileTree {
 		}
 		
 		//delete the file
-		boolean result = false;
+		boolean result = true;
 		if(!tmpNode.isFile()) {
 			result = this.deleteDir(tmpNode, feedback);	
 		}

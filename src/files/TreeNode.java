@@ -3,8 +3,6 @@ package files;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.sun.org.apache.regexp.internal.recompile;
-
 public class TreeNode {
 	private FileTree fTree;
 	static int nodeCount;// global variable, as a counter
