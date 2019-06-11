@@ -3,8 +3,8 @@ package management;
 import java.util.HashMap;
 import java.util.Map;
 
+import connection.MyServer;
 import files.Metadata;
-import servers.MyServer;
 
 public class SlaveManagement extends Management{
 	public MyServer mServer;
@@ -43,7 +43,7 @@ public class SlaveManagement extends Management{
 		}
 	}
 	
-	//request for metadata with fileid
+	//request for metadata with fileid, command is like: request 1
 	private void request(String[] args, StringBuilder feedback) {
 		if(args.length != 2) {
 			feedback.append("Error: request need 2 argument");
@@ -59,7 +59,7 @@ public class SlaveManagement extends Management{
 		feedback.append(metadata.toString());
 	}
 	
-	//remove the metadata according to the fileID
+	//remove the metadata according to the fileID, eg command: remove 3
 	private void remove(String[] args, StringBuilder feedback) {
 		if(args.length != 2) {
 			feedback.append("Error: remove need 2 argument");
@@ -78,39 +78,34 @@ public class SlaveManagement extends Management{
 	
 	//update the last access time
 	private void updateLastAccessTime(String[] args, StringBuilder feedback) {
-		if(args.length != 3) {
-			feedback.append("Error: updateLastAccessTime need 3 argument");
+		if(args.length != 2) {
+			feedback.append("Error: updateLastAccessTime need 2 argument");
 			return;
 		}
 		int Id = Integer.parseInt(args[1]);
-		String lastAccessTime = args[2];
 		Metadata metadata = metadataMap.get(Id);
 		if(metadata == null) {
 			feedback.append("Error: fileId "+ Id +"does not exist");
 			return;
 		}
 		
-		metadata.updateLastAccessTime(lastAccessTime);
+		metadata.updateLastAccessTime();
 		metadataMap.put(Id, metadata);
 		feedback.append("update last access time success");
 	}
 	
-	//create a new metadata
+	//create a new metadata, eg command: create 12 1 file1 1
 	private void create(String[] args, StringBuilder feedback) {
-		if(args.length != 10) {
-			feedback.append("Error: create need 10 argument");
+		if(args.length != 5) {
+			feedback.append("Error: create need 5 argument");
 			return;
 		}
 		int Id = Integer.parseInt(args[1]);
 		int parent = Integer.parseInt(args[2]);
 		String name = args[3];
-		long size = Long.parseLong(args[4]);
-		int type = Integer.parseInt(args[5]);
-		String permissions = args[6];
-		String lastAccesstime = args[7];
-		String lastModifyTime = args[8];
-		String createTime = args[9];
-		Metadata metadata = new Metadata(Id, parent, name, size, type, permissions, lastAccesstime, lastModifyTime, createTime);
+		int type = Integer.parseInt(args[4]);
+
+		Metadata metadata = new Metadata(Id, parent, name, type);
 		if(metadataMap.get(Id) != null) {
 			feedback.append("Error: file already exists");
 			return;

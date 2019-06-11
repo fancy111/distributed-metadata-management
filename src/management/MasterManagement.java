@@ -1,7 +1,7 @@
 package management;
 
+import connection.MyServer;
 import files.FileTree;
-import servers.MyServer;
 
 public class MasterManagement extends Management {
 	public MyServer mServer;//belong to master server
@@ -126,7 +126,7 @@ public class MasterManagement extends Management {
 		//if find the file successfully, put the result into feedback
 		String result;
 		if((result = fileTree.state(args[1], feedback)) != null) {
-			feedback.delete(feedback.length() - 6, feedback.length());//remove the stat: 
+			feedback.delete(0, feedback.length());//remove the stat: 
 			feedback.append(result);
 		}
 	}

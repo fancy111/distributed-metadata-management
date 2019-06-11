@@ -1,5 +1,7 @@
 package files;
 
+import utlis.Utils;
+
 //lustre
 public class Metadata {
 	int ID;// id of the metadata, equal to file id and node id
@@ -26,26 +28,46 @@ public class Metadata {
 		this.createTime = createTime;
 	}
 	
+	public Metadata(int Id,int parent, String name, int type) {
+		this.ID = Id;
+		this.name = name;
+		this.type = type;
+		this.parent = parent;
+		this.permissions = "-rw-rw-r--";
+		this.size = 0;
+		this.lastAccessTime = Utils.getCurrentTime();
+		this.lastModifyTime = Utils.getCurrentTime();
+		this.createTime = Utils.getCurrentTime();
+	}
+	
 	public void updateName(String name) {
 		this.name = name;
 	}
 	
-	public void updateLastAccessTime(String lastAccessTime) {
-		this.lastAccessTime = lastAccessTime;
+	public void updateLastAccessTime() {
+		this.lastAccessTime = Utils.getCurrentTime();
 	}
 	
-	public void updateLastModifyTime(String lastModifyTime) {
-		this.lastModifyTime = lastModifyTime;
+	public void updateLastModifyTime() {
+		this.lastModifyTime = Utils.getCurrentTime();
 	}
 	
 	//change the metadata into string
 	public String toString() {
-		String result = "File:'"+name+"'\n";
-		result += "Size:" + size + "\n";
-		result += "Access:" + permissions + "\n";
-		result += "Last Access Time:" + lastAccessTime + "\n";
-		result += "Last Modify Time:" + lastModifyTime + "\n";
-		result += "create Time:" + createTime + "\n";
+		String filetype = "";
+		if(type == 0) {
+			filetype = "directory";
+		}
+		else {
+			filetype = "file";
+		}
+		String result = "File:"+name+" @";
+		result += "Size:" + size + " @";
+		result += "Type:" + filetype + " @";
+		result += "Access:" + permissions + " @";
+		result += "LastAccessTime:" + lastAccessTime + " @";
+		result += "LastModifyTime:" + lastModifyTime + " @";
+		result += "CreateTime:" + createTime;
 		return result;
 	}
 }

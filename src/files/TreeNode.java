@@ -38,7 +38,10 @@ public class TreeNode {
 			children = new ArrayList<TreeNode>();
 		}
 		
-		//!!!TO DO----------------- system call to slave servers to update the metadata-------------
+		//system call to slave servers to add the metadata
+		StringBuilder feedback = new StringBuilder();
+		String msg = createMsg();
+		this.systemCall(msg, feedback);
 	}
 	
 	/**
@@ -136,6 +139,8 @@ public class TreeNode {
 			return false;
 		}
 		//TODO------system call to slaves to delete the metadata-------------
+		String msg = "remove " + this.nodeID;
+		this.systemCall(msg, feedback);
 		
 		this.children.remove(i);
 		return true;
@@ -170,8 +175,24 @@ public class TreeNode {
 	public String getMetadata(StringBuilder feedback) {
 		String metadataMsg = null;
 		
-		//TODO------system call to slaves to fetch the metadata of this node-------------
-		
+		//system call to slaves to fetch the metadata of this node
+		String command = "request " + this.nodeID;
+		this.systemCall(command, feedback);
+		if(!feedback.toString().startsWith("Error")) {
+			metadataMsg = feedback.toString();
+		}
 		return metadataMsg;
+	}
+	
+	private void systemCall(String msg, StringBuilder feedback) {
+		int slaveId = this.fTree.management.mServer.hashSlave(this.nodeID);
+		this.fTree.management.mServer.sendTo(slaveId, msg, feedback);
+	}
+	
+	//the create command sent to slave server
+	private String createMsg() {
+		int type = this.isFile ? 1 : 0;
+		String msg = "create " + this.nodeID + " " + this.parent.nodeID + " "  + this.name + " "  + type;
+		return msg;
 	}
 }

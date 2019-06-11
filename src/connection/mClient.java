@@ -8,8 +8,12 @@ public class mClient {
 		
 		Scanner scanner = new Scanner(System.in);
 		String request;
+		String reply;
 		while(true) {
-			System.out.print("$ ");
+			request = "pwd";
+			clientConnection.requestToServer(request);
+			reply = clientConnection.replyFromServer();
+			System.out.print(reply + "$ ");
 			//send request to server
 			request = scanner.nextLine();
 			
@@ -24,7 +28,19 @@ public class mClient {
 			}
 			
 			clientConnection.requestToServer(request);
-			String reply = clientConnection.replyFromServer();
+			reply = clientConnection.replyFromServer();
+			if(reply == null || reply.equals("")) {
+				continue;
+			}
+			if("stat".equals(commands[0])) {
+				String[] tmp = reply.split("@");
+				reply = "";
+				for(int i = 0; i < tmp.length - 1; i++) {
+					reply += tmp[i];
+					reply += "\n";
+				}
+				reply += tmp[tmp.length - 1];
+			}
 			System.out.println(reply);
 		}
 	}
